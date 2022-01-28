@@ -5,6 +5,7 @@
 Welcome to the `PyPSA-PL` repository! `PyPSA-PL` is a set of scripts and data that can be used with the `PyPSA` open energy modelling framework to analyze the mechanics of the Polish power system. The model includes a unit-by-unit representation of thermal power plants, a 75-200 node 400/220 kV transmission grid, a spatial distribution of renewables based on the most comprehensive assessment available, a detailed forecast of capacity increases across several technologies based on the existing and planned project pipeline.
 
 PyPSA-PL was created by the Instrat Foundation and described in a trilogy of publications about the Polish coal phase-out:
+
 1. Czyżak, P., Wrona, A. (2021). Achieving the goal. Coal phase-out in Polish power sector. Instrat Policy Paper 01/2021. https://instrat.pl/en/coal-phase-out/
 2. Czyżak, P., Sikorski, M., Wrona, A. (2021). What’s next after coal? RES potential in Poland. Instrat Policy Paper 06/2021. https://instrat.pl/en/res-potential/
 3. Czyżak, P., Wrona, A., Borkowski, M. (2021). The missing element. Energy security considerations. Instrat Policy Paper 09/2021. https://instrat.pl/en/energy-security/
@@ -25,7 +26,7 @@ To use the model you will need to have a basic understanding of `Python`, `conda
 
 Before you start working with PyPSA-PL, please follow the [installation guidelines for PyPSA](https://pypsa.readthedocs.io/en/latest/installation.html).
 
-In the PyPSA-PL repository you will find a `requirements.txt` file that can be used to set up a `conda` environment. You will notice that this file downloads the `0.17.0` version of the `pypsa` package - that is the version used to create `PyPSA-PL`. There were significant changes introduced in `PyPSA 0.18.0`, but the PL version has not be upgraded yet. 
+In the PyPSA-PL repository you will find a `requirements.txt` file that can be used to set up a `conda` environment. You will notice that this file downloads the `0.17.0` version of the `pypsa` package - that is the version used to create `PyPSA-PL`. There were significant changes introduced in `PyPSA 0.18.0`, but the PL version has not be upgraded yet.
 
 The basic installation steps can be summarized as follows:
 
@@ -37,16 +38,16 @@ The basic installation steps can be summarized as follows:
 ## Getting started
 
 `PyPSA-PL` is a set of scripts and spreadsheets that can be used to generate inputs for the actual `PyPSA` framework.
-After you complete the installation procedue, it is relatively easy to get some first results:
+After you complete the installation procedure, it is relatively easy to get some first results:
 
 1. Open the `prepare_input_files` script in the `pypsa-pl` folder using your IDE (preferably open the IDE in Admin mode).
-2. Set the `scenario_name` and `reference_year`. The available scenarios are `instrat` and `pep2040`, the input data is provided for years `2020`, `2021`, `2025`, `2030`, `2035`, `2040`. It is necessary to run each year separately. 
+2. Set the `scenario_name` and `reference_year`. The available scenarios are `instrat` and `pep2040`, the input data is provided for years `2020`, `2021`, `2025`, `2030`, `2035`, `2040`. It is necessary to run each year separately.
 3. Save the file and run it (if an error pops up, make sure the terminal points to the correct directory).
 4. This will create the `PyPSA` input data in your `pypsa-pl/pypsa/scenario_name/data/reference_year/` folder.
-6. Open the `run_pypsa_lopf` script in the `pypsa-pl` folder using your IDE
-7. Set the solver name in line 155 (where the `network.lopf` function is called). See the `PyPSA` documentation for a list of compatible solvers.
-8. Save the file and run it.
-9. Once the optimization is finished, the results will be placed in your `pypsa-pl/pypsa/scenario_name/results/reference_year/` folder. (if you see an error complaining about the directory being not accessible, create the results folder manually)
+5. Open the `run_pypsa_lopf` script in the `pypsa-pl` folder using your IDE
+6. Set the solver name in line 155 (where the `network.lopf` function is called). See the `PyPSA` documentation for a list of compatible solvers.
+7. Save the file and run it.
+8. Once the optimization is finished, the results will be placed in your `pypsa-pl/pypsa/scenario_name/results/reference_year/` folder. (if you see an error complaining about the directory being not accessible, create the results folder manually)
 
 ## Accessing the results
 
@@ -54,14 +55,14 @@ You can look at the basic generation, SRMC and emissions data provided in `csv` 
 
 Import the network from the `netCDF` file:
 
-```
+```python
 network_2040 = pypsa.Network()
 network_2040.import_from_netcdf('pypsa/instrat/results/2040/network.nc')
 ```
 
 Access the model outputs, e.g. the generation by carrier:
 
-```
+```python
 network_2040.generators_t.p.groupby(network_2040.generators.carrier, axis=1).sum().sum()
 ```
 
@@ -74,7 +75,7 @@ Two scenarios are provided with `PyPSA-PL`:
 - Instrat - based on Instrat's own unit-by-unit coal phase-out schedule, with detailed year-by-year RES forecasts. The scenario is described in detail in the `What’s next after coal? RES potential in Poland` paper.
 - PEP2040 - based on the official `Polish Energy Policy until 2040`. Since that only provides aggregated capacity and generation by fuel values, a unit-by-unit decommissioning schedule for coal plants was generated. The expansion plans for other technologies were proposed as well based on the currently available knowledge (e.g. the placement of gas plants, nuclear units etc.). In this scenario the imports are disabled, following the reasoning described in `PEP2040`.
 
-Please note that `PyPSA-PL` is not configured as a capacity expansion model (CEM), but rather a merit-order style dispatch model. The installed capacity for different technologies is provided manually as part of the scenario design. This decision was made to ensure that the `Instrat` scenario is technically, politically, socially, economically viable in each given year, while also following a dispatching procedure similar to the one performed by the TSO. Running the model as a CEM means the capacity additions are set by the optimizer and do not always correspond to reality. It is possible to set the `capex` values for each technology and convert `PyPSA-PL` to a CEM, but that may require some programming work by the user. 
+Please note that `PyPSA-PL` is not configured as a capacity expansion model (CEM), but rather a merit-order style dispatch model. The installed capacity for different technologies is provided manually as part of the scenario design. This decision was made to ensure that the `Instrat` scenario is technically, politically, socially, economically viable in each given year, while also following a dispatching procedure similar to the one performed by the TSO. Running the model as a CEM means the capacity additions are set by the optimizer and do not always correspond to reality. It is possible to set the `capex` values for each technology and convert `PyPSA-PL` to a CEM, but that may require some programming work by the user.
 
 `PyPSA-PL` contains a full representation of the Polish `400 kV` transmission network and a simplified representation of `220 kV` lines, with a total of 75 nodes. You can also run the model using the full `220 kV` network by using the `lines_380and220` tab in the `lines.xlsx` file and `buses_380and220` in the `buses.xlsx` file, but that will increase the node count to 200 and require at least 64 GB of RAM on your computer.
 
@@ -98,12 +99,12 @@ The shared files are:
 - `capacity_factors` - the wind and solar generation in each hour of the year (and across voivodeships), the generalized CHP generation profile (to account for the fact that CHP units have limited availability in the summer)
 - `buses` - a list of network buses, for both the standard 400kV network and the full 220kV network
 - `installed_capacity_distribution` - the spatial placement of distributed generator capacity (onshore wind, PV, small-scale batteries, industrial units) across voivodeships
-- `lines` - a list of network lines per year - the lines are expanded according to the TSO's plans for 2030 and Instrat's forecast to accomodate increased RES deployment. See the report: `The missing element` for more details on the methodology.
+- `lines` - a list of network lines per year - the lines are expanded according to the TSO's plans for 2030 and Instrat's forecast to accommodate increased RES deployment. See the report: `The missing element` for more details on the methodology.
 - `load_decomposition_over_voivodeships_2019` - the distribution of load across Polish voivodeships (this is the most detailed officially provided load disaggregation)
 - `load_hour_factors_2019` - the hourly demand profile in 2019 - this is scaled for future years using the yearly demand projections from PEP2040. The year 2019 was chosen because the demand in 2020 was strongly impacted by the COVID-19 pandemic.
 - `wojewodztwa-max` - a `.geojson` file with the Polish voivodeships, these are used to map network nodes with demand and RES generation values
 
-Once changes have been made, you need to re-generate the `pypsa` inputs using `prepare_input_files` scipt and then run the optimization using `run_pypsa_lopf`.
+Once changes have been made, you need to re-generate the `pypsa` inputs using `prepare_input_files` script and then run the optimization using `run_pypsa_lopf`.
 
 You can look at the `pypsa/scenario_name/data` folder contents to diagnose any data issues.
 
@@ -112,7 +113,7 @@ You can look at the `pypsa/scenario_name/data` folder contents to diagnose any d
 We are aware that many improvements need to be made in the `PyPSA-PL` model, some of them include:
 
 - Heating - including heat demand in the model and proposing a full coal-to-X conversion scheme for existing CHP plants;
-- Hydrogen - including electrolyzers in the model, which could allow for a more detailed assessment of using RES energy surplusses for green hydrogen generation
+- Hydrogen - including electrolyzers in the model, which could allow for a more detailed assessment of using RES energy surpluses for green hydrogen generation
 - EU-wide network - improving the representation of the European-wide transmission network and the cross-border flows by adding at least a single node per country, with capacity expansion projections based on e.g. the NECP's;
 - Coal unit flexibility - adding ramp-up/down and minimum utilization constraints. This was removed from the model due to the significant increase in model complexity and solving times, but it is possible to implement these constraints in the `utility_units` input file;
 - Demand and RES disaggregation - both load and RES distribution are defined on voivodeship level. These could be disaggregated onto the network nodes using a more sophisticated approach - e.g. taking into account population density, economic activity, industry etc.;
@@ -132,16 +133,12 @@ The most significant model references are listed below:
 - EMHIRES: Gonzalez Aparicio I; Zucker A; Careri F; Monforti-Ferrario F; Huld T; Badger J. EMHIRES dataset Part I: Wind power generation. European Meteorological derived HIgh resolution RES generation time series for present and future scenarios . EUR 28171 EN. Luxembourg (Luxembourg): Publications Office of the European Union; 2016. JRC103442 and Gonzalez Aparicio, Iratxe; Huld, Thomas; Careri, Francesco; Monforti Ferrario, Fabio; Zucker, Andreas (2017): Solar hourly generation time series at country, NUTS 1, NUTS 2 level and bidding zones. European Commission, Joint Research Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/jrc-emhires-solar-generation-time-series
 - Renewables.ninja: Pfenninger, Stefan and Staffell, Iain (2016). Long-term patterns of European PV output using 30 years of validated hourly reanalysis and satellite data. Energy 114, pp. 1251-1265. doi: 10.1016/j.energy.2016.08.060 and Staffell, Iain and Pfenninger, Stefan (2016). Using Bias-Corrected Reanalysis to Simulate Current and Future Wind Power Output. Energy 114, pp. 1224-1239. doi: 10.1016/j.energy.2016.08.068
 - Instrat power plant database: Stępień, K., Czyżak, P., Hetmański, M. (2021). Power plant database - Poland. Instrat. http://bit.ly/instratpowerplants
-- PEP2040: Dziennik Urzędowy Rzeczypospolitej Polskiej. (2021). Obwieszczenie Ministra Klimatu i Środowiska z dnia 2 marca 2021 r. w sprawie polityki energetycznej państwa do 2040 r. MONITOR
-POLSKI: https://monitorpolski.gov.pl/M2021000026401.pdf
-- TNDP: PSE. (2020). Plan rozwoju w zakresie zaspokojenia obecnego i przyszłego zapotrzebowania
-na energię elektryczną na lata 2021-2030: https://www.pse.pl/documents/20182/21595261/
-Dokument_glowny_PRSP_2021-2030_20200528.pdf
+- PEP2040: Dziennik Urzędowy Rzeczypospolitej Polskiej. (2021). Obwieszczenie Ministra Klimatu i Środowiska z dnia 2 marca 2021 r. w sprawie polityki energetycznej państwa do 2040 r. MONITOR POLSKI: https://monitorpolski.gov.pl/M2021000026401.pdf
+- TNDP: PSE. (2020). Plan rozwoju w zakresie zaspokojenia obecnego i przyszłego zapotrzebowania na energię elektryczną na lata 2021-2030: https://www.pse.pl/documents/20182/21595261/Dokument_glowny_PRSP_2021-2030_20200528.pdf
 - ENTSO-E TYNDP 2020: https://tyndp.entsoe.eu/
 - IEA WEO 2021: https://www.iea.org/reports/world-energy-outlook-2021
-- GLAES: Ryberg, D. S., Robinius, M., & Stolten, D. (2018). Evaluating Land Eligibility Constraints of Renewable Energy Sources in Europe. Energies 11 (5). pp. 1246. http://www.mdpi.com/1996-1073/11/5/1246 
-- energy.instrat.pl
+- GLAES: Ryberg, D. S., Robinius, M., & Stolten, D. (2018). Evaluating Land Eligibility Constraints of Renewable Energy Sources in Europe. Energies 11 (5). pp. 1246. http://www.mdpi.com/1996-1073/11/5/1246
+- https://energy.instrat.pl/
 - PSE: https://www.pse.pl/dane-systemowe
 - GUS: https://bdl.stat.gov.pl/BDL/start
-- ARE: ARE. (2021). Informacja Statystyczna o Energii Elektrycznej. https://www.are.
-waw.pl/badania-statystyczne/wynikowe-informacje-statystyczne#informacja-statystyczna-o-energii-elektrycznej
+- ARE: ARE. (2021). Informacja Statystyczna o Energii Elektrycznej. https://www.are.waw.pl/badania-statystyczne/wynikowe-informacje-statystyczne#informacja-statystyczna-o-energii-elektrycznej
