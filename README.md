@@ -6,9 +6,9 @@ Welcome to the `PyPSA-PL` repository! `PyPSA-PL` is a set of scripts and data th
 
 PyPSA-PL was created by the Instrat Foundation and described in a trilogy of publications about the Polish coal phase-out:
 
-1. Czyżak, P., Wrona, A. (2021). Achieving the goal. Coal phase-out in Polish power sector. Instrat Policy Paper 01/2021. https://instrat.pl/en/coal-phase-out/
-2. Czyżak, P., Sikorski, M., Wrona, A. (2021). What’s next after coal? RES potential in Poland. Instrat Policy Paper 06/2021. https://instrat.pl/en/res-potential/
-3. Czyżak, P., Wrona, A., Borkowski, M. (2021). The missing element. Energy security considerations. Instrat Policy Paper 09/2021. https://instrat.pl/en/energy-security/
+1. Czyżak, P., Wrona, A. (2021). Achieving the goal. Coal phase-out in Polish power sector. Instrat Policy Paper 01/2021. <https://instrat.pl/en/coal-phase-out/>
+2. Czyżak, P., Sikorski, M., Wrona, A. (2021). What’s next after coal? RES potential in Poland. Instrat Policy Paper 06/2021. <https://instrat.pl/en/res-potential/>
+3. Czyżak, P., Wrona, A., Borkowski, M. (2021). The missing element. Energy security considerations. Instrat Policy Paper 09/2021. <https://instrat.pl/en/energy-security/>
 
 ## Citation and license
 
@@ -63,7 +63,7 @@ network_2040.import_from_netcdf('pypsa/instrat/results/2040/network.nc')
 Access the model outputs, e.g. the generation by carrier:
 
 ```python
-network_2040.generators_t.p.groupby(network_2040.generators.carrier, axis=1).sum().sum()
+network_2040.generators_t.p.group by(network_2040.generators.carrier, axis=1).sum().sum()
 ```
 
 You can find several examples of processing results in the `PyPSA` documentation.
@@ -75,11 +75,11 @@ Two scenarios are provided with `PyPSA-PL`:
 - Instrat - based on Instrat's own unit-by-unit coal phase-out schedule, with detailed year-by-year RES forecasts. The scenario is described in detail in the `What’s next after coal? RES potential in Poland` paper.
 - PEP2040 - based on the official `Polish Energy Policy until 2040`. Since that only provides aggregated capacity and generation by fuel values, a unit-by-unit decommissioning schedule for coal plants was generated. The expansion plans for other technologies were proposed as well based on the currently available knowledge (e.g. the placement of gas plants, nuclear units etc.). In this scenario the imports are disabled, following the reasoning described in `PEP2040`.
 
-Please note that `PyPSA-PL` is not configured as a capacity expansion model (CEM), but rather a merit-order style dispatch model. The installed capacity for different technologies is provided manually as part of the scenario design. This decision was made to ensure that the `Instrat` scenario is technically, politically, socially, economically viable in each given year, while also following a dispatching procedure similar to the one performed by the TSO. Running the model as a CEM means the capacity additions are set by the optimizer and do not always correspond to reality. It is possible to set the `capex` values for each technology and convert `PyPSA-PL` to a CEM, but that may require some programming work by the user.
+Please note that `PyPSA-PL` is not configured as a capacity expansion model (CEM), but rather a merit-order style dispatch model. The installed capacity for different technologies is provided manually as part of the scenario design. This decision was made to ensure that the `Instrat` scenario is technically, politically, socially, economically viable in each given year, while also following a dispatching procedure similar to the one performed by the TSO. Running the model as a CEM means the capacity additions are set by the optimizer and do not always correspond to reality. It is possible to set the `CAPEX` values for each technology and convert `PyPSA-PL` to a CEM, but that may require some programming work by the user.
 
 `PyPSA-PL` contains a full representation of the Polish `400 kV` transmission network and a simplified representation of `220 kV` lines, with a total of 75 nodes. You can also run the model using the full `220 kV` network by using the `lines_380and220` tab in the `lines.xlsx` file and `buses_380and220` in the `buses.xlsx` file, but that will increase the node count to 200 and require at least 64 GB of RAM on your computer.
 
-Each node of the network has some load attached to it, as well as distributed generators (e.g. wind farms, PV) and possibly utility-scale generation units (coal, gas plants etc.). The load and RES spatial resolution is set on a voivodeship level and then disaggraged proportionally onto the nodes in the given voivodeship.
+Each node of the network has some load attached to it, as well as distributed generators (e.g. wind farms, PV) and possibly utility-scale generation units (coal, gas plants etc.). The load and RES spatial resolution is set on a voivodeship level and then disaggregated proportionally onto the nodes in the given voivodeship.
 
 Only the Polish transmission network is modelled, with existing cross-border links provided but no representation of the European transmission network. The link capacities are set to real values, which limits the peak imports. The actual imports are determined by the prices in other countries and these will translate to aggregated net import volumes in a given year. The import prices were calibrated using 2020 values and then adapted to keep them above the SRMC of Polish gas units in the future (it is most likely that if RES generation is low in Poland, it will be low in some neighbouring countries as well and the national gas units will set the merit order price).
 
@@ -121,7 +121,7 @@ We are aware that many improvements need to be made in the `PyPSA-PL` model, som
 - Line loading - to ensure an even distribution of line loading with the simplified 220 kV network, the resistance and reactance of 220 kV lines was changed in the `line_types` file in core `PyPSA`. This is not an ideal solution and should be handled in the `PyPSA-PL` code;
 - Thermal unit maintenance schedule - the Polish coal units are extremely prone to outages due to their age. This is not represented in the model and could mean that the availability of coal plants is higher than in reality. A maintenance schedule and a random outage algorithm could be included to represent the actual working conditions of coal plants;
 
-You are welcome to expand and modify `PyPSA-PL` according to your needs (honoring the license - see `Citiation and license` section). You can also submit pull requests onto the `PyPSA-PL` repository, but due to a lack of resources we cannot ensure we will be able to review and approve those.
+You are welcome to expand and modify `PyPSA-PL` according to your needs (honoring the license - see `Citation and license` section). You can also submit pull requests onto the `PyPSA-PL` repository, but due to a lack of resources we cannot ensure we will be able to review and approve those.
 
 ## References
 
@@ -130,15 +130,15 @@ Please look at the Instrat Policy Papers cited in the `Introduction` for a detai
 The most significant model references are listed below:
 
 - PyPSA: T. Brown, J. Hörsch, D. Schlachtberger, PyPSA: Python for Power System Analysis, 2018, Journal of Open Research Software, 6(1), arXiv:1707.09913, DOI:10.5334/jors.188
-- EMHIRES: Gonzalez Aparicio I; Zucker A; Careri F; Monforti-Ferrario F; Huld T; Badger J. EMHIRES dataset Part I: Wind power generation. European Meteorological derived HIgh resolution RES generation time series for present and future scenarios . EUR 28171 EN. Luxembourg (Luxembourg): Publications Office of the European Union; 2016. JRC103442 and Gonzalez Aparicio, Iratxe; Huld, Thomas; Careri, Francesco; Monforti Ferrario, Fabio; Zucker, Andreas (2017): Solar hourly generation time series at country, NUTS 1, NUTS 2 level and bidding zones. European Commission, Joint Research Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/jrc-emhires-solar-generation-time-series
+- EMHIRES: Gonzalez Aparicio I; Zucker A; Careri F; Monforti-Ferrario F; Huld T; Badger J. EMHIRES dataset Part I: Wind power generation. European Meteorological derived HIgh resolution RES generation time series for present and future scenarios . EUR 28171 EN. Luxembourg (Luxembourg): Publications Office of the European Union; 2016. JRC103442 and Gonzalez Aparicio, Iratxe; Huld, Thomas; Careri, Francesco; Monforti Ferrario, Fabio; Zucker, Andreas (2017): Solar hourly generation time series at country, NUTS 1, NUTS 2 level and bidding zones. European Commission, Joint Research Centre (JRC) [Dataset] PID: <http://data.europa.eu/89h/jrc-emhires-solar-generation-time-series>
 - Renewables.ninja: Pfenninger, Stefan and Staffell, Iain (2016). Long-term patterns of European PV output using 30 years of validated hourly reanalysis and satellite data. Energy 114, pp. 1251-1265. doi: 10.1016/j.energy.2016.08.060 and Staffell, Iain and Pfenninger, Stefan (2016). Using Bias-Corrected Reanalysis to Simulate Current and Future Wind Power Output. Energy 114, pp. 1224-1239. doi: 10.1016/j.energy.2016.08.068
-- Instrat power plant database: Stępień, K., Czyżak, P., Hetmański, M. (2021). Power plant database - Poland. Instrat. http://bit.ly/instratpowerplants
-- PEP2040: Dziennik Urzędowy Rzeczypospolitej Polskiej. (2021). Obwieszczenie Ministra Klimatu i Środowiska z dnia 2 marca 2021 r. w sprawie polityki energetycznej państwa do 2040 r. MONITOR POLSKI: https://monitorpolski.gov.pl/M2021000026401.pdf
-- TNDP: PSE. (2020). Plan rozwoju w zakresie zaspokojenia obecnego i przyszłego zapotrzebowania na energię elektryczną na lata 2021-2030: https://www.pse.pl/documents/20182/21595261/Dokument_glowny_PRSP_2021-2030_20200528.pdf
-- ENTSO-E TYNDP 2020: https://tyndp.entsoe.eu/
-- IEA WEO 2021: https://www.iea.org/reports/world-energy-outlook-2021
-- GLAES: Ryberg, D. S., Robinius, M., & Stolten, D. (2018). Evaluating Land Eligibility Constraints of Renewable Energy Sources in Europe. Energies 11 (5). pp. 1246. http://www.mdpi.com/1996-1073/11/5/1246
-- https://energy.instrat.pl/
-- PSE: https://www.pse.pl/dane-systemowe
-- GUS: https://bdl.stat.gov.pl/BDL/start
-- ARE: ARE. (2021). Informacja Statystyczna o Energii Elektrycznej. https://www.are.waw.pl/badania-statystyczne/wynikowe-informacje-statystyczne#informacja-statystyczna-o-energii-elektrycznej
+- Instrat power plant database: Stępień, K., Czyżak, P., Hetmański, M. (2021). Power plant database - Poland. Instrat. <http://bit.ly/instratpowerplants>
+- PEP2040: Dziennik Urzędowy Rzeczypospolitej Polskiej. (2021). Obwieszczenie Ministra Klimatu i Środowiska z dnia 2 marca 2021 r. w sprawie polityki energetycznej państwa do 2040 r. MONITOR POLSKI: <https://monitorpolski.gov.pl/M2021000026401.pdf>
+- TNDP: PSE. (2020). Plan rozwoju w zakresie zaspokojenia obecnego i przyszłego zapotrzebowania na energię elektryczną na lata 2021-2030: <https://www.pse.pl/documents/20182/21595261/Dokument_glowny_PRSP_2021-2030_20200528.pdf>
+- ENTSO-E TYNDP 2020: <https://tyndp.entsoe.eu/>
+- IEA WEO 2021: <https://www.iea.org/reports/world-energy-outlook-2021>
+- GLAES: Ryberg, D. S., Robinius, M., & Stolten, D. (2018). Evaluating Land Eligibility Constraints of Renewable Energy Sources in Europe. Energies 11 (5). pp. 1246. <http://www.mdpi.com/1996-1073/11/5/1246>
+- <https://energy.instrat.pl/>
+- PSE: <https://www.pse.pl/dane-systemowe>
+- GUS: <https://bdl.stat.gov.pl/BDL/start>
+- ARE: ARE. (2021). Informacja Statystyczna o Energii Elektrycznej. <https://www.are.waw.pl/badania-statystyczne/wynikowe-informacje-statystyczne#informacja-statystyczna-o-energii-elektrycznej>
